@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barber App - Citas</title>
-    <!-- Tailwind CSS para diseño rápido y estético -->
+    <title>Lyon Barber - Reservas</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Lucide Icons para iconos bonitos -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
@@ -19,44 +17,37 @@
 </head>
 <body class="max-w-md mx-auto shadow-2xl min-h-screen relative pb-20 bg-white">
 
-    <!-- HEADER -->
     <header class="p-6 pt-10">
-        <h1 id="page-title" class="text-3xl font-bold text-gray-800">Lyon Barber</h1>
-        
+        <h1 class="text-3xl font-bold text-gray-800">Lyon Barber</h1>
     </header>
 
-    <!-- PANTALLA: INICIO / SERVICIOS -->
+    <!-- PANTALLA: INICIO -->
     <div id="home" class="tab-content active-tab p-6 space-y-6">
-        <div class="bg-blue-600 rounded-3xl p-6 text-white shadow-lg overflow-hidden relative">
+        <div class="bg-blue-600 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
             <div class="relative z-10">
                 <h2 class="text-xl font-bold">¡Bienvenido!</h2>
-                
+                <p class="text-blue-100 text-sm">Reserva con 40 min de espacio entre clientes.</p>
             </div>
             <div class="absolute -right-4 -bottom-4 opacity-20"><i data-lucide="scissors" size="100"></i></div>
         </div>
 
-        <h3 class="font-semibold text-lg text-gray-700">Servicios Populares</h3>
+        <h3 class="font-semibold text-lg text-gray-700">Nuestros Servicios</h3>
         <div class="grid grid-cols-2 gap-4">
             <button onclick="selectService('Corte Clásico', 15)" class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-left hover:bg-blue-50 transition">
-                
                 <p class="font-medium">Corte Clásico</p>
                 <p class="text-xs text-gray-400">$15.00</p>
             </button>
-            <button onclick="selectService('Barba ', 10)" class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-left hover:bg-blue-50 transition">
-         
-                <p class="font-medium">Barba </p>
+            <button onclick="selectService('Barba', 10)" class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-left hover:bg-blue-50 transition">
+                <p class="font-medium">Barba</p>
                 <p class="text-xs text-gray-400">$10.00</p>
-
+            </button>
             <button onclick="selectService('Corte Moderno', 20)" class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-left hover:bg-blue-50 transition">
                 <p class="font-medium">Corte Moderno</p>
                 <p class="text-xs text-gray-400">$20.00</p>
-
-             <button onclick="selectService('Corte Premium', 25)" class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-left hover:bg-blue-50 transition">
-                
-                <p class="font-medium"> Lyon Premium </p>
-                <p class="font-medium"> Barba y Corte</p>
-                <p class="text-xs text-gray-400">$25.00</p>   
-
+            </button>
+            <button onclick="selectService('Lyon Premium', 25)" class="p-4 bg-gray-50 border border-gray-100 rounded-2xl text-left hover:bg-blue-50 transition">
+                <p class="font-medium">Lyon Premium</p>
+                <p class="text-xs text-gray-400">$25.00</p>
             </button>
         </div>
     </div>
@@ -79,7 +70,8 @@
                     <input type="time" id="time" class="w-full bg-gray-50 p-3 rounded-xl mt-1 border border-gray-200">
                 </div>
             </div>
-            <button onclick="saveAppointment()" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-blue-200 active:scale-95 transition">
+            <p class="text-xs text-gray-400">* Las citas deben tener al menos 40 minutos de diferencia entre sí.</p>
+            <button onclick="saveAppointment()" class="w-full bg-blue-600 text-white p-4 rounded-2xl font-bold shadow-lg active:scale-95 transition">
                 Confirmar Cita
             </button>
         </div>
@@ -88,13 +80,10 @@
     <!-- PANTALLA: MIS CITAS -->
     <div id="appointments" class="tab-content p-6 space-y-4">
         <h3 class="font-semibold text-xl">Mis Reservas</h3>
-        <div id="appointment-list" class="space-y-3">
-            <!-- Aquí se cargan las citas dinámicamente -->
-            <p class="text-gray-400 text-center py-10">No tienes citas programadas.</p>
-        </div>
+        <div id="appointment-list" class="space-y-3"></div>
     </div>
 
-    <!-- NAVEGACIÓN INFERIOR (ESTILO APP) -->
+    <!-- NAVEGACIÓN -->
     <nav class="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass border-t border-gray-100 flex justify-around p-3 z-50">
         <button onclick="switchTab('home')" id="nav-home" class="flex flex-col items-center text-gray-400 transition active-nav">
             <i data-lucide="home" size="20"></i>
@@ -110,29 +99,28 @@
         </button>
     </nav>
 
-    <!-- SCRIPTS DE FUNCIONALIDAD -->
     <script>
-        // Inicializar iconos
         lucide.createIcons();
 
-        // Navegación entre pestañas
+        // Configurar fecha mínima al cargar
+        window.onload = () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').setAttribute('min', today);
+        };
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active-tab'));
             document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active-nav'));
-            
             document.getElementById(tabId).classList.add('active-tab');
             document.getElementById('nav-' + tabId).classList.add('active-nav');
-
             if(tabId === 'appointments') loadAppointments();
         }
 
-        // Seleccionar servicio y saltar a reserva
         function selectService(name, price) {
             document.getElementById('selected-service').value = `${name} - $${price}`;
             switchTab('booking');
         }
 
-        // Guardar cita en LocalStorage (Persistencia básica)
         function saveAppointment() {
             const service = document.getElementById('selected-service').value;
             const date = document.getElementById('date').value;
@@ -143,32 +131,64 @@
                 return;
             }
 
-            const appointment = { id: Date.now(), service, date, time };
+            // 1. Validar que no sea una fecha/hora pasada
+            const now = new Date();
+            const selectedDate = new Date(`${date}T${time}`);
+
+            if (selectedDate < now) {
+                alert("No puedes programar una cita en el pasado. Por favor, elige una hora posterior a la actual.");
+                return;
+            }
+
+            // 2. Validar disponibilidad (40 minutos de diferencia)
             let appointments = JSON.parse(localStorage.getItem('my_citas')) || [];
+            const marginInMinutes = 40;
+
+            // Buscamos si hay alguna cita que choque
+            const conflict = appointments.find(app => {
+                const appDate = new Date(`${app.date}T${app.time}`);
+                // Calcular diferencia absoluta en milisegundos y pasar a minutos
+                const diff = Math.abs(selectedDate - appDate) / (1000 * 60);
+                return diff < marginInMinutes;
+            });
+
+            if (conflict) {
+                alert(`Lo sentimos, este horario ya se encuentra reservado o está muy cerca de otra cita. \n\nPor favor escoja otra hora (mínimo 40 min de diferencia).`);
+                return;
+            }
+
+            // Guardar si todo está bien
+            const appointment = { id: Date.now(), service, date, time };
             appointments.push(appointment);
             localStorage.setItem('my_citas', JSON.stringify(appointments));
 
-            alert("¡Cita confirmada!");
+            alert("¡Cita confirmada con éxito!");
             switchTab('appointments');
+            
+            // Limpiar campos
+            document.getElementById('date').value = "";
+            document.getElementById('time').value = "";
         }
 
-        // Cargar citas desde LocalStorage
         function loadAppointments() {
             const list = document.getElementById('appointment-list');
-            const appointments = JSON.parse(localStorage.getItem('my_citas')) || [];
+            let appointments = JSON.parse(localStorage.getItem('my_citas')) || [];
 
             if(appointments.length === 0) {
                 list.innerHTML = '<p class="text-gray-400 text-center py-10">No tienes citas programadas.</p>';
                 return;
             }
 
+            // Ordenar por fecha y hora
+            appointments.sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+
             list.innerHTML = appointments.map(app => `
-                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 flex justify-between items-center">
+                <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 flex justify-between items-center shadow-sm">
                     <div>
                         <p class="font-bold text-gray-800">${app.service}</p>
-                        <p class="text-sm text-gray-500">${app.date} a las ${app.time}</p>
+                        <p class="text-sm text-gray-500">${app.date} | ${app.time}</p>
                     </div>
-                    <button onclick="deleteAppointment(${app.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-lg">
+                    <button onclick="deleteAppointment(${app.id})" class="text-red-400 hover:bg-red-50 p-2 rounded-lg transition">
                         <i data-lucide="trash-2" size="18"></i>
                     </button>
                 </div>
@@ -177,11 +197,17 @@
         }
 
         function deleteAppointment(id) {
-            let appointments = JSON.parse(localStorage.getItem('my_citas')) || [];
-            appointments = appointments.filter(a => a.id !== id);
-            localStorage.setItem('my_citas', JSON.stringify(appointments));
-            loadAppointments();
+            if(confirm("¿Estás seguro de que deseas cancelar esta cita?")) {
+                let appointments = JSON.parse(localStorage.getItem('my_citas')) || [];
+                appointments = appointments.filter(a => a.id !== id);
+                localStorage.setItem('my_citas', JSON.stringify(appointments));
+                loadAppointments();
+            }
         }
     </script>
 </body>
 </html>
+    </script>
+</body>
+</html>
+
