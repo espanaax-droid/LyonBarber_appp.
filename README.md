@@ -4,3 +4,4 @@ Este proyecto es una solución tecnológica diseñada bajo los principios de la 
 
 
 Para testear la aplicación como usuario final, haz clic en el siguiente enlace: 
+https://espanaax-droid.github.io/LyonBarber_appp./
